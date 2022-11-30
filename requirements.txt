@@ -4,5 +4,5 @@ cfpq-data
 pre-commit
 pycubool
 pydot
-pytest
+pytest==7.1.3
 scipy
