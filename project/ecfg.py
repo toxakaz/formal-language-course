@@ -15,7 +15,6 @@ class ECFG:
         self.productions = productions
 
     def to_text(self) -> str:
-
         return "\n".join(
             str(p) + " -> " + str(self.productions[p]) for p in self.productions
         )
@@ -40,7 +39,6 @@ class ECFG:
 
     @classmethod
     def from_text(cls: "ECFG", text: str, start_symbol: str = Variable("S")) -> "ECFG":
-
         variables = set()
         productions = dict()
         for line in text.splitlines():
