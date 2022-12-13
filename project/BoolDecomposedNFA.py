@@ -1,7 +1,8 @@
-from pyformlang.finite_automaton import NondeterministicFiniteAutomaton
+from pyformlang.finite_automaton import NondeterministicFiniteAutomaton, State
 from scipy import sparse
 from scipy.sparse import dok_matrix
 from collections.abc import Iterable
+from project import RSM
 
 __all__ = ["BoolDecomposedNFA"]
 
@@ -105,6 +106,51 @@ class BoolDecomposedNFA:
             res.add_start_state(self.__dict[i])
         for i in self.__final_vector.nonzero()[1]:
             res.add_final_state(self.__dict[i])
+        return res
+
+    @staticmethod
+    def from_rsm(rsm: RSM):
+        res = BoolDecomposedNFA()
+
+        states, start_states, final_states = set(), set(), set()
+        for var, nfa in rsm.boxes.items():
+            for s in nfa.states:
+                state = State((var, s.value))
+                states.add(state)
+                if s in nfa.start_states:
+                    start_states.add(state)
+                if s in nfa.final_states:
+                    final_states.add(state)
+
+        states_count = len(states)
+        states = {v: k for k, v in enumerate(states)}
+
+        res.__states_count = states_count
+        res.__dict = {v: k for k, v in states.items()}
+
+        res.__start_vector = dok_matrix((1, states_count), dtype=bool)
+        for s in start_states:
+            res.__start_vector[0, states[s]] = True
+
+        res.__final_vector = dok_matrix((1, states_count), dtype=bool)
+        for s in final_states:
+            res.__final_vector[0, states[s]] = True
+
+        for var, nfa in rsm.boxes.items():
+            for start, final_dict in nfa.to_dict().items():
+                for label, final_states in final_dict.items():
+                    if not isinstance(final_states, set):
+                        final_states = {final_states}
+                    for final in final_states:
+                        if not label in res.__matrices:
+                            res.__matrices[label] = dok_matrix(
+                                (states_count, states_count), dtype=bool
+                            )
+                        res.__matrices[label][
+                            states[State((var, start.value))],
+                            states[State((var, final.value))],
+                        ] = True
+
         return res
 
     def __iand__(self, other: "BoolDecomposedNFA") -> "BoolDecomposedNFA":

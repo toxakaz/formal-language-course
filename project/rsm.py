@@ -2,7 +2,7 @@ from pyformlang.cfg import Variable
 from pyformlang.finite_automaton import EpsilonNFA
 from typing import Dict
 
-from project.ecfg import ECFG
+from project import ECFG
 
 
 class RSM:
@@ -14,7 +14,10 @@ class RSM:
     def from_ecfg(cls: "RSM", ecfg: ECFG) -> "RSM":
         return cls(
             ecfg.start,
-            {head: body.to_epsilon_nfa() for head, body in ecfg.productions.items()},
+            {
+                head: body.to_epsilon_nfa().to_deterministic()
+                for head, body in ecfg.productions.items()
+            },
         )
 
     def minimize(self: "RSM") -> "RSM":
