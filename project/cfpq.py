@@ -4,7 +4,7 @@ from scipy.sparse import dok_matrix
 from project import BoolDecomposedNFA, graph_to_nfa, cfg_to_wcnf, RSM, ECFG, Variable
 from typing import Set, Tuple, Union
 
-__all__ = ["cfpq_by_tensor", "tensor", "cfpq"]
+__all__ = ["cfpq_by_hellings", "hellings", "cfpq_by_tensor", "tensor", "cfpq"]
 
 
 def hellings(graph: MultiDiGraph, cfg: CFG) -> Set[Tuple]:
