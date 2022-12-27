@@ -2,11 +2,12 @@ from networkx import MultiDiGraph
 from pyformlang.cfg import CFG
 from scipy.sparse import dok_matrix
 from project import BoolDecomposedNFA, graph_to_nfa, RSM, ECFG, Variable
+from typing import Set, Tuple, Union
 
 __all__ = ["cfpq_by_tensor", "tensor", "cfpq"]
 
 
-def tensor(graph: MultiDiGraph, cfg: CFG) -> set[int, str, int]:
+def tensor(graph: MultiDiGraph, cfg: CFG) -> Set[Union[int, str, int]]:
 
     graph_bm = BoolDecomposedNFA.from_nfa(graph_to_nfa(graph))
     graph_bm.matrices = graph_bm.take_matrices()
@@ -63,9 +64,9 @@ def cfpq_by_tensor(
     cfg: CFG,
     graph: MultiDiGraph,
     start_symbol: Variable = Variable("S"),
-    start_nodes: set[any] = None,
-    final_nodes: set[any] = None,
-) -> set[tuple[any, any]]:
+    start_nodes: Set = None,
+    final_nodes: Set = None,
+) -> Set[Tuple]:
     return cfpq(cfg, graph, start_symbol, start_nodes, final_nodes, tensor)
 
 
@@ -73,10 +74,10 @@ def cfpq(
     cfg: CFG,
     graph: MultiDiGraph,
     start_symbol: Variable = Variable("S"),
-    start_nodes: set[any] = None,
-    final_nodes: set[any] = None,
+    start_nodes: Set = None,
+    final_nodes: Set = None,
     algorithm: callable = tensor,
-) -> set[tuple[any, any]]:
+) -> Set[Tuple]:
 
     if start_nodes is None:
         start_nodes = set(graph.nodes)

@@ -94,5 +94,5 @@ def _create_graph(nodes, edges) -> nx.MultiDiGraph:
         ),
     ],
 )
-def test_context_free_path_query(actual: set[tuple], expected: set[tuple]):
+def test_context_free_path_query(actual, expected):
     assert actual == expected
