@@ -37,6 +37,12 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      # Java 8 is the default on Mac and Windows runners, but 11 is required
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
       # Install requirements
       - name: Install requirements
 
