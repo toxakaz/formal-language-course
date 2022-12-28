@@ -34,7 +34,6 @@ expr =
   | Concat of expr * expr        // конкатенация языков
   | Union of expr * expr         // объединение языков
   | Star of expr                 // замыкание языков (звезда Клини)
-  | Smb of expr                  // единичный переход
 lambda = Lambda of List<var> * expr
 ```
 
